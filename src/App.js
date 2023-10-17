@@ -1,25 +1,50 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Provider } from "react-redux";
+import store from "./store";
+import AdminDashboard from "./components/AdminDashboard";
+import ControllerDashboard from "./components/ControllerDashboard";
+import HeadCoachDashboard from "./components/HeadCoachDashboard";
+import CoachDashboard from "./components/CoachDashboard";
+import Login from "./components/Login";
 
-function App() {
+const App = () => {
+  const user = useSelector((state) => state.user);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Task Management App</h1>
+      {user.isAuthenticated ? (
+        renderDashboard(user.role)
+      ) : (
+        <Login />
+      )}
     </div>
   );
-}
+};
 
-export default App;
+const renderDashboard = (role) => {
+  switch (role) {
+    case "Admin":
+      return <AdminDashboard />;
+    case "Controller":
+      return <ControllerDashboard />;
+    case "Head Coach":
+      return <HeadCoachDashboard />;
+    case "Coach":
+      return <CoachDashboard />;
+    default:
+      return null;
+  }
+};
+
+
+const AppWithStore = () => (
+  <Provider store={store}>
+    <App />
+  </Provider>
+);
+
+export default AppWithStore;
+
+
